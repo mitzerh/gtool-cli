@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
+    "gtool": "./index.js",
     "gtool-cli": "./index.js"
   },
   "repository": {

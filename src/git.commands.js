@@ -10,7 +10,8 @@ class GitCmd {
         this._dir = dir;
         this._plugins = plugins;
         this._info = {
-            fetchUrl: (cmd('git remote show -n origin | grep Fetch', this._dir)).trim()
+            fetchUrl: (cmd('git remote show -n origin | grep Fetch', this._dir)).trim(),
+            currBranch: cmd('git rev-parse --abbrev-ref HEAD', this._dir)
         };
     }
 
@@ -81,6 +82,57 @@ class GitCmd {
             return res;
 
         })();
+    }
+
+    get(type, opts, verbose) {
+        let cmd = null;
+
+        switch (type) {
+
+            // curent branch
+            case "current-branch":
+                return this._info.currBranch;
+
+            // HEAD commit sha
+            case "head-sha":
+                cmd = "git rev-parse --short HEAD";
+                break;
+
+            case "head-sha-origin":
+                cmd = `git rev-parse --short origin/${this._info.currBranch}`;
+                break;
+
+            case "status":
+                cmd = "git status -sb";
+                break;
+
+            case "diff-status":
+                cmd = "git diff --name-status";
+                break;
+
+            case "diff-status-origin":
+                cmd = `git diff --name-status ${this._info.currBranch} ^origin/${this._info.currBranch}`;
+                break;
+
+            case "diff-sha-changed-files":
+                cmd = `git diff --name-only ${opts.shaBefore} ${opts.shaAfter}`;
+                break;
+
+            // case 'origin-reset':
+            //     cmd = `git reset --hard origin/${props.CURRENT_BRANCH}`;
+            //     break;
+
+            case 'fetch-all':
+                cmd = `git fetch --all && git fetch --tags`;
+                break;
+
+        }
+
+        let output = '';
+        if (cmd) {
+            output = Helper.shellCmd(cmd, this._dir, verbose) || '';
+        }
+        return output;
     }
 
 }
