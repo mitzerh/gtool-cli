@@ -1,0 +1,26 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# eclipse ide
+.project
+
+# logs
+.log
+
+# compression
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# node
+node_modules/
+
+.env
