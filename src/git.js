@@ -67,6 +67,7 @@ class GitCmd {
 
             let res = {
                 type: type.toUpperCase(),
+                repo: this.getRepoType(remote),
                 remote: remote,
                 name: name,
                 path: path,
@@ -134,6 +135,15 @@ class GitCmd {
             output = Helper.shellCmd(cmd, this._dir, verbose) || '';
         }
         return output;
+    }
+
+    getRepoType(remote) {
+        let res = null;
+        res = customPlugin('getRepoType', remote, this._plugins);
+        if (!res) {
+            res = defaultPlugins.getRepoType(remote);
+        }
+        return res;
     }
 
 }

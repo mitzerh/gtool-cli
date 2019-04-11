@@ -6,28 +6,23 @@ class Plugin {
 
     }
 
+    getRepoType(remoteUrl) {
+        return (/github\.com/.test(remoteUrl)) ? 'github' : null;
+    }
+
     getUrl(info) {
+        if (info.repo !== 'github') { return null; }
         let path = info.path.replace(/\.git$/, '');
-        return `https://github.com/${path}`;
+        res = `https://github.com/${path}`;
     }
 
     getPullRequestUrl(info) {
-        let res = null;
-        try {
-            let url = this.getUrl(info);
-            let targetBranch = info.targetBranch || info.base;
-
-            if (info.currBranch !== targetBranch) {
-                res = `${url}/compare/${info.currBranch}...${targetBranch}`;
-            } else {
-                log('ignored.. current branch is the same as the base branch.\n');
-            }
-        } catch(err) {
-            console.log('getPullRequestUrl() error:', err);
-        }
-        return res;
+        if (info.repo !== 'github') { return null; }
+        let url = this.getUrl(info);
+        let targetBranch = info.targetBranch || info.base;
+        return `${url}/compare/${info.currBranch}...${targetBranch}`;
     }
 
 }
 
-module.exports = new Plugin;
+module.exports = Plugin;

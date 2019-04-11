@@ -15,14 +15,21 @@ module.exports = {
         let path = `${homedir}/.gtool-cli`;
         let filename = 'config';
         let file = `${path}/${filename}`;
+        let pluginsPath = `${path}/plugins`;
 
         let defaults = {
             path: path,
             filename: filename,
             file: file,
+            plugins: [],
             // using open 'app' key
             browser: null
         };
+
+        // plugins
+        if (Helper.isPathExists(pluginsPath)) {
+            // todo here: load plugins
+        }
 
         let user = {};
 

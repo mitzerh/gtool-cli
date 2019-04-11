@@ -3,7 +3,7 @@
 require('colors');
 const config = require('./config');
 const Helper = require('./src/helper');
-const GitCmd = require('./src/git.commands');
+const GitCmd = require('./src/git');
 const path = require('path');
 const currDir = process.cwd();
 const log = console.log;
