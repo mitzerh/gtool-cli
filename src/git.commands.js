@@ -84,7 +84,9 @@ class GitCmd {
     }
 
     get(type, opts, verbose) {
+        opts = opts || {};
         let cmd = null;
+        let branch = opts.branch || this._info.currBranch;
 
         switch (type) {
 
@@ -98,7 +100,7 @@ class GitCmd {
                 break;
 
             case "head-sha-origin":
-                cmd = `git rev-parse --short origin/${this._info.currBranch}`;
+                cmd = `git rev-parse --short origin/${branch}`;
                 break;
 
             case "status":
@@ -110,7 +112,7 @@ class GitCmd {
                 break;
 
             case "diff-status-origin":
-                cmd = `git diff --name-status ${this._info.currBranch} ^origin/${this._info.currBranch}`;
+                cmd = `git diff --name-status ${branch} ^origin/${branch}`;
                 break;
 
             case "diff-sha-changed-files":
