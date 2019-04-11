@@ -1,0 +1,25 @@
+{
+  "name": "gtool-cli",
+  "version": "0.0.1",
+  "description": "Git Helper: CLI Commands",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitzerh/gtool-cli.git"
+  },
+  "keywords": [
+    "git",
+    "tools",
+    "cli",
+    "helpers"
+  ],
+  "author": "Helcon Mabesa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mitzerh/gtool-cli/issues"
+  },
+  "homepage": "https://github.com/mitzerh/gtool-cli#readme"
+}
