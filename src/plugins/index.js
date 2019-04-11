@@ -9,10 +9,21 @@ class Plugins {
 
     getUrl(info) {
         let res = null;
-        let type = this.getKnownType(info.origin);
+        let type = this.getKnownType(info.remote);
         switch (type) {
             case 'github':
                 res = githubPlugin.getUrl(info);
+                break;
+        }
+        return res;
+    }
+
+    getPullRequestUrl(info) {
+        let res = null;
+        let type = this.getKnownType(info.remote);
+        switch (type) {
+            case 'github':
+                res = githubPlugin.getPullRequestUrl(info);
                 break;
         }
         return res;

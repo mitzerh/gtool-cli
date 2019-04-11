@@ -1,6 +1,8 @@
 const CLIHelper = require('cli-helper').constructor;
 const fs = require('fs');
 const path = require('path');
+const open = require('open');
+const log = console.log;
 
 class Helper extends CLIHelper {
 
@@ -30,6 +32,14 @@ class Helper extends CLIHelper {
 
     capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    opener(url, config) {
+        let browser = config.userConfig.browser || 'default';
+        log('opening:', `[ browser:${browser} ]`, url.cyan);
+        open(url, {
+            app: config.userConfig.browser
+        });
     }
 }
 
