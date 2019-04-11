@@ -27,6 +27,10 @@ class Helper extends CLIHelper {
         }
         return res;
     }
+
+    capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 }
 
 module.exports = new Helper;

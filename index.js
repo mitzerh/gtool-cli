@@ -12,13 +12,13 @@ const cmd = process.argv[2];
 
 // check cmd arg
 if (!cmd) {
-    log('command required!'.red);
+    log('command required!\n'.red);
     exit();
 }
 
 // check cmd arg = method
 if (!Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
-    log('command does not exist!'.red);
+    log('command does not exist!\n'.red);
     exit();
 }
 
@@ -26,7 +26,7 @@ if (!Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
 let repoDir = Helper.repoDir(currDir);
 
 if (!repoDir) {
-    log('current path is not a git repo!'.red);
+    log('current path is not a git repo!\n'.red);
     exit();
 }
 
