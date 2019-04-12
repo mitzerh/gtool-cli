@@ -13,6 +13,10 @@ module.exports = {
         src: `${base}/src`
     },
 
+    commandAlias: {
+        repo: 'web'
+    },
+
     userConfig: (() => {
 
         let path = `${homedir}/.gtool-cli`;

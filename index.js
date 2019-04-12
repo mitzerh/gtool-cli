@@ -9,12 +9,8 @@ const currDir = process.cwd();
 const log = console.log;
 
 let cmd = ((val) => {
-    const alias = {
-        'repo': 'browser'
-    };
-    return alias[val] || val;
+    return config.commandAlias[val] || val;
 })(process.argv[2]);
-
 
 // check cmd arg
 if (!cmd) {
