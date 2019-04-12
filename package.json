@@ -4,7 +4,7 @@
   "description": "Git Helper: CLI Commands",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
   },
   "bin": {
     "gtool": "./index.js",

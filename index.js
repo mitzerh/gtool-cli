@@ -8,7 +8,13 @@ const path = require('path');
 const currDir = process.cwd();
 const log = console.log;
 
-const cmd = process.argv[2];
+let cmd = ((val) => {
+    const alias = {
+        'repo': 'browser'
+    };
+    return alias[val] || val;
+})(process.argv[2]);
+
 
 // check cmd arg
 if (!cmd) {

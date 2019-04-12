@@ -3,24 +3,47 @@ const log = console.log;
 class Plugin {
 
     constructor() {
-
+        this._name = 'github';
     }
 
-    getRepoType(remoteUrl) {
-        return (/github\.com/.test(remoteUrl)) ? 'github' : null;
+    /**
+     * check whether based on the remote fetch url it is this plugin's repo
+     */
+    isPlugin(remoteUrl) {
+        return /github\.com/.test(remoteUrl);
     }
 
-    getUrl(info) {
-        if (info.repo !== 'github') { return null; }
-        let path = info.path.replace(/\.git$/, '');
-        res = `https://github.com/${path}`;
+    /**
+     * get the name of this plugin
+     */
+    name() {
+        return this._name;
     }
 
-    getPullRequestUrl(info) {
-        if (info.repo !== 'github') { return null; }
-        let url = this.getUrl(info);
+    /**
+     * get the web url of the repo
+     */
+    url(info) {
+        let path = this.pathname(info);
+        path = path.replace(/\.git$/, '');
+        return `https://github.com/${path}`;
+    }
+
+    /**
+     * pull request web url
+     */
+    pullRequestUrl(info) {
+        let url = this.url(info);
         let targetBranch = info.targetBranch || info.base;
         return `${url}/compare/${info.currBranch}...${targetBranch}`;
+    }
+
+    /**
+     * pathname
+     */
+    pathname(info) {
+        let match = info.remote.match(/github\.com\:(.+)/);
+        return match.pop();
     }
 
 }

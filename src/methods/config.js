@@ -12,23 +12,37 @@ module.exports = (opts) => {
     let arr = process.argv;
     let iter = 0;
     let settings = {};
+    let deletions = [];
 
     while (iter < arr.length) {
         if (/^--/.test(arr[iter])) {
-            settings[arr[iter].replace(/^--/, '')] = arr[iter+1];
+            let key = arr[iter].replace(/^--/, '');
+            let val = arr[iter+1];
+            if (key === 'del') {
+                deletions.push(val);
+            } else {
+                settings[key] = val;
+            }
             iter++;
         }
         iter++;
     }
 
-    if (Helper.isEmptyObj(settings)) { return; }
-    
     // save
     let curr = {};
     if (!Helper.isFileExists(config.userConfig.file)) {
         Helper.createDir(config.userConfig.path);
     } else {
         curr = JSON.parse(Helper.readFile(config.userConfig.file));
+    }
+
+    // deletions
+    if (deletions.length > 0) {
+        deletions.forEach((key) => {
+            if (curr[key]) {
+                delete curr[key];
+            }
+        });
     }
 
     curr = JSON.stringify(Object.assign(curr, settings), null, 2);

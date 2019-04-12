@@ -1,7 +1,10 @@
 const path = require('path');
 const os = require('os');
+const fs = require('fs');
 const base = path.resolve(`${__dirname}/../`);
 const Helper = require('cli-helper').instance;
+
+const homedir = os.homedir();
 
 module.exports = {
 
@@ -10,7 +13,7 @@ module.exports = {
         src: `${base}/src`
     },
 
-    userConfig: ((homedir) => {
+    userConfig: (() => {
 
         let path = `${homedir}/.gtool-cli`;
         let filename = 'config';
@@ -21,27 +24,48 @@ module.exports = {
             path: path,
             filename: filename,
             file: file,
-            plugins: [],
+            plugins: getPlugins(pluginsPath),
             // using open 'app' key
             browser: null
         };
 
-        // plugins
-        if (Helper.isPathExists(pluginsPath)) {
-            // todo here: load plugins
-        }
-
-        let user = {};
-
-        if (Helper.isFileExists(file)) {
-            try {
-                user = JSON.parse(Helper.readFile(file));
-            } catch(err) {
-                // error reading config file
+        // user custom config
+        let userCustomConfig = (() => {
+            let res = {};
+            if (Helper.isFileExists(file)) {
+                try {
+                    res = JSON.parse(Helper.readFile(file));
+                } catch(err) {
+                    // error reading config file
+                }
             }
-        }
-        return Object.assign(defaults, user);
+            return res;
+        })();
 
-    })(os.homedir())
+        return Object.assign(defaults, userCustomConfig);
+
+    })()
 
 };
+
+function getPlugins(path) {
+    if (!Helper.isPathExists(path)) { return []; }
+    let res = [];
+
+    fs.readdirSync(path).forEach((item) => {
+        let src = `${path}/${item}`;
+        try {
+            let Plugin = require(src);
+            res.push(new Plugin);
+        } catch(err) {
+            log('error getting plugin from:', src.cyan);
+            log(err);
+        }
+
+    });
+    return res;
+}
+
+function isDir(path) {
+    return fs.lstatSync(path).isDirectory();
+}

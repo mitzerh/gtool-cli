@@ -36,7 +36,8 @@ class Helper extends CLIHelper {
 
     opener(url, config) {
         let browser = config.userConfig.browser || 'default';
-        log('opening:', `[ browser:${browser} ]`, url.cyan);
+        log(`opening [ ${browser} ]:`);
+        log(url.cyan, '\n');
         open(url, {
             app: config.userConfig.browser
         });

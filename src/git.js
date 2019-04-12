@@ -1,86 +1,85 @@
+const config = require('../config');
 const Helper = require('cli-helper').instance;
 const fs = require('fs');
 const path = require('path');
+const log = console.log;
 
 const defaultPlugins = require('./plugins');
 
 class GitCmd {
 
-    constructor(dir, plugins) {
+    constructor(dir) {
         this._dir = dir;
-        this._plugins = plugins;
-        this._info = {
-            fetchUrl: (cmd('git remote show -n origin | grep Fetch', this._dir)).trim(),
-            currBranch: cmd('git rev-parse --abbrev-ref HEAD', this._dir)
-        };
-    }
+        this._useDefaultPlugin = true;
 
-    getRepoRemote() {
-        return this._info.remote || (() => {
-            let res = this._info.fetchUrl.replace(/^([^:]+)\:\s+/i, '');
-            this._info.remote = res;
-            return res;
+        const fetchUrl = cmd('git config --get remote.origin.url');
+        const currBranch = cmd('git rev-parse --abbrev-ref HEAD', this._dir);
+        const remote = fetchUrl.replace(/^([^:]+)\:\s+/i, '');
+
+        this._plugin = (() => {
+            let method = 'isPlugin';
+            let plugins = config.userConfig.plugins;
+            let instance = defaultPlugins;
+            if (Array.isArray(plugins) && plugins.length > 0) {
+                for (let i = 0; i < plugins.length; i++) {
+                    let plugin = plugins[i];
+                    if (hasPluginMethod(plugin, method)) {
+                        if (plugin[method](remote)) {
+                            instance = plugin;
+                            this._useDefaultPlugin = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            return instance;
         })();
+
+        this._info = {
+            fetchUrl: fetchUrl,
+            currBranch: currBranch,
+            remote: remote,
+            type: this._plugin.name(),
+            name: (() => {
+                let match = remote.match(/\/[^\/]+$/);
+                return match[0].replace(/^\//, '').replace(/\.git$/, '');
+            })(),
+            mode: /^https/.test(remote) ? 'https' : 'ssh'
+        };
+
     }
 
     getRepoName() {
-        return this._info.name || (() => {
-            let remote = this.getRepoRemote();
-            let match = remote.match(/\/[^\/]+$/);
-            let res = match[0].replace(/^\//, '').replace(/\.git$/, '');
-            this._info.name = res;
-            return res;
-        })();
+        return this._info.name;
     }
 
     getUrl(info) {
         let res = null;
-        let method = 'getUrl';
-        res = customPlugin(method, info, this._plugins);
-        // try defaults
-        if (!res) {
-            res = defaultPlugins[method](info);
-        }
-        return res;
+        return this._getPlugin('url', info);
     }
 
     getPullRequestUrl(info) {
-        let res = null;
-        let method = 'getPullRequestUrl';
-        res = customPlugin(method, info, this._plugins);
-        // try defaults
-        if (!res) {
-            res = defaultPlugins[method](info);
-        }
-        return res;
+        return this._getPlugin('pullRequestUrl', info);
     }
 
     getDetails() {
-        return this._info.details || (() => {
-            let remote = this.getRepoRemote();
-            let name = this.getRepoName();
-            let type = /^https/.test(remote) ? 'https' : 'ssh';
-            let path = (type === 'ssh') ? remote.match(/[^\:]+$/)[0] : (() => {
-                let match = remote.match(/(http[s]?:\/\/)?([^\/\s]+\/)(.*)/);
-                return match[3];
-            })();
+
+        return this._details || (() => {
+            let remote = this._info.remote;
+            let mode = this._info.mode;
 
             let res = {
-                type: type.toUpperCase(),
-                repo: this.getRepoType(remote),
+                mode: this._info.mode.toUpperCase(),
+                type: this._info.type,
                 remote: remote,
-                name: name,
-                path: path,
+                name: this._info.name,
+                path: this._getPlugin('pathname', this._info),
+                url: this._getPlugin('url', this._info),
                 base: 'master' // todo: pull from api
             };
 
-            res = Object.assign(res, {
-                url: this.getUrl(res)
-            });
-
-            this._info.details = res;
+            this._details = res;
             return res;
-
         })();
     }
 
@@ -137,11 +136,19 @@ class GitCmd {
         return output;
     }
 
-    getRepoType(remote) {
+    _getPlugin(method, info) {
         let res = null;
-        res = customPlugin('getRepoType', remote, this._plugins);
-        if (!res) {
-            res = defaultPlugins.getRepoType(remote);
+        if (this._plugin[method]) {
+            res = this._plugin[method](info);
+        } else if (defaultPlugins[method]) {
+            if (!this._useDefaultPlugin && !this._warned) {
+                this._warned = true;
+                let custom = this._info.type;
+                log('ERROR:'.red, `missing method '${method}()' on your custom plugin: ${custom}\n`);
+                process.exit(1);
+            }
+            // always try defaults just in case
+            res = defaultPlugins[method](info);
         }
         return res;
     }
@@ -155,20 +162,6 @@ function hasPluginMethod(plugin, method) {
 
 function cmd(cmd, path, opt) {
     return Helper.shellCmd(cmd, path, opt);
-}
-
-function customPlugin(method, info, plugins) {
-    let res = null;
-    if (Array.isArray(plugins)) {
-        for (let i = 0; i < plugins[i]; i++) {
-            let plugin = plugins[i];
-            if (hasPluginMethod(plugin, method)) {
-                res = plugin[method](info);
-                if (res) { break; }
-            }
-        }
-    }
-    return res;
 }
 
 module.exports = GitCmd;
