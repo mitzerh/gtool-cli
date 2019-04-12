@@ -1,4 +1,6 @@
-
+/**
+ * Print out the information details about the repository
+ */
 const config = require('../../config');
 const Helper = require('../helper');
 const log = console.log;
@@ -20,7 +22,7 @@ module.exports = (opts) => {
         echo.push('Remote  : ' + `(${info.type}) ${info.remote}`.cyan);
         echo.push('Web Url : ' + info.url.cyan);
     }
-    
+
     log(echo.join('\n'), '\n');
 };
 

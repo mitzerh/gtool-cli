@@ -1,4 +1,6 @@
-
+/**
+ * Attempt to open the Pull Request web url
+ */
 const config = require('../../config');
 const Helper = require('../helper');
 const log = console.log;
