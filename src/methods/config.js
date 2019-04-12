@@ -12,13 +12,20 @@ const cmd = process.argv[3];
 
 module.exports = (opts) => {
 
-    let arr = process.argv;
+    let arr = process.argv.slice(3);
+
+    if (arr.length === 0) {
+        return showConfig();
+    }
+
     let iter = 0;
     let settings = {};
     let deletions = [];
 
+    let hasArgs = false;
     while (iter < arr.length) {
         if (/^--/.test(arr[iter])) {
+            if (!hasArgs) { hasArgs = true; }
             let key = arr[iter].replace(/^--/, '');
             let val = arr[iter+1];
             if (key === 'del') {
@@ -54,3 +61,10 @@ module.exports = (opts) => {
     log('saved config:', config.userConfig.file.cyan);
 
 };
+
+function showConfig() {
+    if (!Helper.isFileExists(config.userConfig.file)) { return log('no user custom config defined.\n'); }
+    let conf = JSON.stringify(JSON.parse(Helper.readFile(config.userConfig.file)), null, 2);
+    log('User Custom Config:'.green);
+    log(conf, '\n');
+}
