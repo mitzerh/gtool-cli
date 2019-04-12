@@ -12,8 +12,14 @@ module.exports = (opts) => {
     let info = gitCmd.getDetails();
 
     // check first if current branch is up-to-date on origin
-    let sha = gitCmd.get('head-sha');
     let shaRemote = gitCmd.get('head-sha-origin');
+    // if in remote fetch first
+    if (shaRemote) {
+        gitCmd.get('fetch-branch', null);
+        // make sure to get the lastest remote sha
+        shaRemote = gitCmd.get('head-sha-origin');
+    }
+    let sha = gitCmd.get('head-sha');
 
     log('BRANCH :', currBranch.cyan);
     log('remote :', shaRemote.cyan);

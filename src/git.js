@@ -127,6 +127,9 @@ class GitCmd {
                 cmd = `git fetch --all && git fetch --tags`;
                 break;
 
+            case 'fetch-branch':
+                cmd = `git fetch origin ${branch}`;
+                break;
         }
 
         let output = '';
