@@ -35,7 +35,7 @@ class Plugin {
     pullRequestUrl(info) {
         let url = this.url(info);
         let targetBranch = info.targetBranch || info.base;
-        return `${url}/compare/${info.currBranch}...${targetBranch}`;
+        return `${url}/compare/${targetBranch}...${info.currBranch}`;
     }
 
     /**
