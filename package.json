@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Git Helper: CLI Commands",
   "main": "index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "bin": {
     "gtool": "./index.js",
     "gtool-cli": "./index.js"
@@ -28,8 +26,8 @@
   "homepage": "https://github.com/mitzerh/gtool-cli#readme",
   "devDependencies": {
     "cli-helper": "^0.3.0",
-    "colors": "^1.3.3",
-    "open": "^6.1.0",
+    "colors": "^1.4.0",
+    "open": "^6.4.0",
     "shelljs": "^0.8.3"
   }
 }
