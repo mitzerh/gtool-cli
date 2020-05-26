@@ -29,5 +29,6 @@
     "colors": "^1.4.0",
     "open": "^6.4.0",
     "shelljs": "^0.8.3"
-  }
+  },
+  "dependencies": {}
 }
