@@ -42,7 +42,7 @@ class Plugin {
      * pathname
      */
     pathname(info) {
-        let match = info.remote.match(/github\.com\:(.+)/);
+        let match = info.remote.match(/github\.com(|.+)\:(.+)/);
         return match.pop();
     }
 
