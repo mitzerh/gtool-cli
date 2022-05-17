@@ -2,8 +2,8 @@
  * Set custom user configuration properties.
  * The custom configuration will be found at {HOME_DIR}/gtool-cli/config
  */
-const config = require('../../config');
-const Helper = require('../helper');
+const config = require('@config');
+const Helper = require('@src/helper');
 const log = console.log;
 const os = require('os');
 const fs = require('fs');

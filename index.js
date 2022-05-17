@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 require('colors');
-const config = require('./config');
-const Helper = require('./src/helper');
-const GitCmd = require('./src/git');
+require('./alias')
+const config = require('@config');
+const Helper = require('@src/helper');
+const GitCmd = require('@src/git');
 const path = require('path');
 const currDir = process.cwd();
 const log = console.log;
@@ -18,26 +19,41 @@ if (!cmd) {
     exit();
 }
 
+// check if feature first
+if (Helper.isFileExists(`${config.dir.src}/features/${cmd}/index.js`)) {
+    setFeature();
+}
 // check cmd arg = method
-if (!Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
+else if (Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
+    setMethod();
+} else {
     log('command does not exist!\n'.red);
     exit();
 }
 
-// check curr path if git repo
-let repoDir = Helper.repoDir(currDir);
+function setMethod() {
+    // check curr path if git repo
+    let repoDir = Helper.repoDir(currDir);
 
-if (!repoDir) {
-    log('current path is not a git repo!\n'.red);
-    exit();
+    if (!repoDir) {
+        log('current path is not a git repo!\n'.red);
+        exit();
+    }
+
+    const gitCmd = new GitCmd(repoDir);
+
+    require(`${config.dir.src}/methods/${cmd}`)({
+        gitCmd: gitCmd,
+        currDir: currDir
+    });
 }
 
-const gitCmd = new GitCmd(repoDir);
+function setFeature() {
+    require(`${config.dir.src}/features/${cmd}`)({
+        currDir: currDir
+    });
+}
 
-require(`${config.dir.src}/methods/${cmd}`)({
-    gitCmd: gitCmd,
-    currDir: currDir
-});
 
 function exit() {
     process.exit();

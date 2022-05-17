@@ -1,8 +1,8 @@
 /**
  * Attempt to open the Pull Request web url
  */
-const config = require('../../config');
-const Helper = require('../helper');
+const config = require('@config');
+const Helper = require('@src/helper');
 const log = console.log;
 
 module.exports = (opts) => {
