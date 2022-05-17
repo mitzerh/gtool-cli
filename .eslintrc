@@ -1,0 +1,40 @@
+{
+    "root": true,
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2015
+    },
+    "rules": {
+        "linebreak-style": ["error", "unix"],
+        "semi": ["error", "always"],
+
+        "comma-dangle": ["error", "never"],
+        "no-cond-assign": ["error", "always"],
+        "no-var": 1,
+
+        "no-unused-vars": "off",
+        "no-console": "off",
+        "no-useless-escape": "off"
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "overrides": [
+        {
+            "files": ["src/static/web/scripts/**/*.js"],
+            "rules": {
+                "no-var": 0
+            },
+            "env": {
+                "es6": false,
+                "browser": true
+            },
+            "globals": {
+                "Modulr": "readonly",
+                "Aurora": "readonly"
+            }
+        }
+    ]
+}

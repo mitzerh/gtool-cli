@@ -1,8 +1,8 @@
 /**
  * Print out the information details about the repository
  */
-const config = require('../../config');
-const Helper = require('../helper');
+const config = require('@config');
+const Helper = require('@src/helper');
 const log = console.log;
 
 let detailed = Helper.getOptArg('--detail');
