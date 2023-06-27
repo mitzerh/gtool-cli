@@ -40,7 +40,7 @@ class Helper extends CLIHelper {
         let use = (/chrome/i.test(browser)) ?
             'chrome' : (/firefox/i.test(browser)) ?
             'firefox' : (/edge/i.test(browser)) ?
-            'edge' : null
+            'edge' : null;
 
         let opts = {};
         if (use) {
