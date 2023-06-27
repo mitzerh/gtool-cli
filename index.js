@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('colors');
-require('./alias')
+require('./alias');
 const config = require('@config');
 const Helper = require('@src/helper');
 const GitCmd = require('@src/git');
