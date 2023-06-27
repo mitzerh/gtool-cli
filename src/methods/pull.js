@@ -9,6 +9,7 @@ module.exports = (opts) => {
     let gitCmd = opts.gitCmd;
 
     let currBranch = gitCmd.get('current-branch');
+    let targetBranch = Helper.getOpt('target') || null;
     let info = gitCmd.getDetails();
 
     // check first if current branch is up-to-date on origin
@@ -32,7 +33,8 @@ module.exports = (opts) => {
     }
 
     let pullRequestUrl = gitCmd.getPullRequestUrl(Object.assign(info, {
-        currBranch: currBranch
+        currBranch: currBranch,
+        targetBranch: targetBranch
     }));
 
     if (pullRequestUrl) {
