@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+require('module-alias/register');
 require('colors');
 require('./alias');
-require('module-alias/register');
 
 const config = require('@config');
 const Helper = require('@src/helper');
