@@ -19,6 +19,9 @@ if (!cmd) {
     exit();
 }
 
+const repoDir = Helper.repoDir(currDir);
+const gitCmd = new GitCmd(repoDir);
+
 // check if feature first
 if (Helper.isFileExists(`${config.dir.src}/features/${cmd}/index.js`)) {
     setFeature();
@@ -32,15 +35,12 @@ else if (Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
 }
 
 function setMethod() {
-    // check curr path if git repo
-    let repoDir = Helper.repoDir(currDir);
+
 
     if (!repoDir) {
         log('current path is not a git repo!\n'.red);
         exit();
     }
-
-    const gitCmd = new GitCmd(repoDir);
 
     require(`${config.dir.src}/methods/${cmd}`)({
         gitCmd: gitCmd,
@@ -50,6 +50,7 @@ function setMethod() {
 
 function setFeature() {
     require(`${config.dir.src}/features/${cmd}`)({
+        gitCmd: gitCmd,
         currDir: currDir
     });
 }
