@@ -11,17 +11,13 @@ npm install gtool-cli
 ## Commands
 
 ### `info`
-
 Information about the current repo
-
 ```
 gtool info
 ```
 
 ### `repo`
-
 Opens the Github repository in your web browser.
-
 ```
 gtool repo
 ```
@@ -33,6 +29,14 @@ Sends you to the web browser, opening a pull request for your current branch.
 ```
 gtool pull
 ```
+
+> By default, the pull request will use the default branch as your base.
+> If you want use a different base, you can pass the target parameter:
+>
+> ```
+> gtool pull --target=collab/123
+> ```
+
 
 ### `config`
 You can set certain config values for your installation.
@@ -46,8 +50,7 @@ gtool config [command] [key] [value]
 | **`set`** | Sets a configuration value |
 | **`unset`** | Removes a configuration value |
 
-> Example:
->
+> Example - set your default browser opener to Firefox:
 > ```
 > gtool config set browser firefox
 > ```
