@@ -1,6 +1,6 @@
 {
   "name": "gtool-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Git Helper: CLI Commands",
   "main": "index.js",
   "scripts": {},
