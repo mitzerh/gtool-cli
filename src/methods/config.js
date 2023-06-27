@@ -18,46 +18,78 @@ module.exports = (opts) => {
         return showConfig();
     }
 
-    let iter = 0;
-    let settings = {};
-    let deletions = [];
+    const cmd = arr[0];
+    const proceed = /set|unset/.test(cmd);
+    const allow =  [
+        'browser'
+    ];
 
-    let hasArgs = false;
-    while (iter < arr.length) {
-        if (/^--/.test(arr[iter])) {
-            if (!hasArgs) { hasArgs = true; }
-            let key = arr[iter].replace(/^--/, '');
-            let val = arr[iter+1];
-            if (key === 'del') {
-                deletions.push(val);
-            } else {
-                settings[key] = val;
-            }
-            iter++;
+    if (!proceed) { return helperStr(); };
+
+    let set = {};
+    let unset = null;
+    let save = true;
+
+    // current
+    let curr = (() => {
+        let res = {};
+        if (!Helper.isFileExists(config.userConfig.file)) {
+            Helper.createDir(config.userConfig.path);
+        } else {
+            res = JSON.parse(Helper.readFile(config.userConfig.file));
         }
-        iter++;
+        return res;
+    })();
+
+    const key = arr[1];
+
+    switch (cmd) {
+
+        case "set":
+            (() => {
+                save = (
+                    allow.includes(key) &&
+                    arr.length >= 3
+                ) ? true : false;
+
+                if (save) {
+                    set[key] = (arr.splice(2)).join(' ');
+                } else {
+                    log('cannot set config!');
+                }
+            })();
+            break;
+
+        case "unset":
+            (() => {
+                let key = arr[1];
+                save = (
+                    allow.includes(key) ||
+                    curr[key]
+                ) ? true : false;
+
+                if (save) {
+                    unset = arr[1];
+                } else {
+                    log('cannot unset key!');
+                }
+            })();
+            break;
+
     }
 
-    // save
-    let curr = {};
-    if (!Helper.isFileExists(config.userConfig.file)) {
-        Helper.createDir(config.userConfig.path);
-    } else {
-        curr = JSON.parse(Helper.readFile(config.userConfig.file));
+    if (!save) { return; }
+
+    // deletion
+    if (unset) {
+        if (curr[unset]) {
+            delete curr[unset];
+        }
     }
 
-    // deletions
-    if (deletions.length > 0) {
-        deletions.forEach((key) => {
-            if (curr[key]) {
-                delete curr[key];
-            }
-        });
-    }
-
-    curr = JSON.stringify(Object.assign(curr, settings), null, 2);
+    // save json config
+    curr = JSON.stringify(Object.assign(curr, set), null, 2);
     Helper.writeFile(config.userConfig.file, curr);
-
     log('saved config:', config.userConfig.file.cyan);
 
 };
@@ -67,4 +99,11 @@ function showConfig() {
     let conf = JSON.stringify(JSON.parse(Helper.readFile(config.userConfig.file)), null, 2);
     log('User Custom Config:'.green);
     log(conf, '\n');
+}
+
+function helperStr() {
+    log('config commands: set, unset');
+    log('example:');
+    log('gtool config set browser chrome');
+    log('gtool config unset browser');
 }
