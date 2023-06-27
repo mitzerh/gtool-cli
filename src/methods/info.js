@@ -8,7 +8,7 @@ const log = console.log;
 let detailed = Helper.getOptArg('--detail');
 
 module.exports = (opts) => {
-    let echo = [];
+    let echo = [''];
     const gitCmd = opts.gitCmd;
     let info = gitCmd.getDetails();
     echo.push('Repository Details:'.green);
