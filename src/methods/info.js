@@ -8,7 +8,7 @@ const log = console.log;
 let detailed = Helper.getOptArg('--detail');
 
 module.exports = (opts) => {
-    let echo = [];
+    let echo = [''];
     const gitCmd = opts.gitCmd;
     let info = gitCmd.getDetails();
     echo.push('Repository Details:'.green);
@@ -22,9 +22,10 @@ module.exports = (opts) => {
         echo.push('Name    : ' + info.name.cyan);
         echo.push('Remote  : ' + `(${info.type}) ${info.remote}`.cyan);
         echo.push('Web Url : ' + info.url.cyan);
+        echo.push('Default : ' + info.base.brightRed);
     }
 
-    echo.push('\nBranch Detils:'.green);
+    echo.push('\nBranch Details:'.green);
 
     let currBranch = gitCmd.get('current-branch');
     let sha = gitCmd.get('head-sha');

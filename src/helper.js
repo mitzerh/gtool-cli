@@ -22,7 +22,7 @@ class Helper extends CLIHelper {
     isEmptyObj(obj) {
         let res = true;
         for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(obj, 'key')) {
                 res = false;
                 break;
             }
@@ -36,11 +36,24 @@ class Helper extends CLIHelper {
 
     opener(url, config) {
         let browser = config.userConfig.browser || 'default';
-        log(`opening [ ${browser} ]:`);
+
+        let use = (/chrome/i.test(browser)) ?
+            'chrome' : (/firefox/i.test(browser)) ?
+            'firefox' : (/edge/i.test(browser)) ?
+            'edge' : null;
+
+        let opts = {};
+        if (use) {
+            opts = {
+                app: {
+                    name: open.apps[use]
+                }
+            };
+        }
+
+        log(`opening [ browser "${use || 'default'}" ]:`);
         log(url.cyan, '\n');
-        open(url, {
-            app: config.userConfig.browser
-        });
+        open(url, opts);
     }
 }
 

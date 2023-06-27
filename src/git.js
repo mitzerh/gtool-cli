@@ -75,12 +75,26 @@ class GitCmd {
                 name: this._info.name,
                 path: this._getPlugin('pathname', this._info),
                 url: this._getPlugin('url', this._info),
-                base: 'master' // todo: pull from api
+                base: this.getDefaultBranch() // 'master' // todo: pull from api
             };
 
             this._details = res;
             return res;
         })();
+    }
+
+    getDefaultBranch() {
+        const remote = this._info.remote;
+        let output = '[unknown]';
+        try {
+            // https://stackoverflow.com/questions/28666357/how-to-get-default-git-branch
+            const cmd = `git remote show ${remote} | sed -n '/HEAD branch/s/.*: //p'`;
+            output = Helper.shellCmd(cmd, this._dir);
+        } catch(err) {
+            console.log('error getting default branch');
+            console.log(err);
+        }
+        return output;
     }
 
     get(type, opts, verbose) {
