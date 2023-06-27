@@ -27,8 +27,9 @@
   "devDependencies": {
     "cli-helper": "1.0.0",
     "colors": "1.4.0",
+    "eslint": "^8.43.0",
     "module-alias": "2.2.2",
-    "open": "6.4.0",
+    "open": "8.4.2",
     "shelljs": "0.8.5"
   },
   "dependencies": {}
