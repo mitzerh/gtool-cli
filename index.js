@@ -2,6 +2,8 @@
 
 require('colors');
 require('./alias');
+require('module-alias/register');
+
 const config = require('@config');
 const Helper = require('@src/helper');
 const GitCmd = require('@src/git');
