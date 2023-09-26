@@ -12,13 +12,13 @@ const currDir = process.cwd();
 const log = console.log;
 
 let cmd = ((val) => {
-    return config.commandAlias[val] || val;
+  return config.commandAlias[val] || val;
 })(process.argv[2]);
 
 // check cmd arg
 if (!cmd) {
-    log('command required!\n'.red);
-    exit();
+  log('command required!\n'.red);
+  exit();
 }
 
 const repoDir = Helper.repoDir(currDir);
@@ -26,38 +26,38 @@ const gitCmd = new GitCmd(repoDir);
 
 // check if feature first
 if (Helper.isFileExists(`${config.dir.src}/features/${cmd}/index.js`)) {
-    setFeature();
+  setFeature();
 }
 // check cmd arg = method
 else if (Helper.isFileExists(`${config.dir.src}/methods/${cmd}.js`)) {
-    setMethod();
+  setMethod();
 } else {
-    log('command does not exist!\n'.red);
-    exit();
+  log('command does not exist!\n'.red);
+  exit();
 }
 
 function setMethod() {
 
 
-    if (!repoDir) {
-        log('current path is not a git repo!\n'.red);
-        exit();
-    }
+  if (!repoDir) {
+    log('current path is not a git repo!\n'.red);
+    exit();
+  }
 
-    require(`${config.dir.src}/methods/${cmd}`)({
-        gitCmd: gitCmd,
-        currDir: currDir
-    });
+  require(`${config.dir.src}/methods/${cmd}`)({
+    gitCmd: gitCmd,
+    currDir: currDir
+  });
 }
 
 function setFeature() {
-    require(`${config.dir.src}/features/${cmd}`)({
-        gitCmd: gitCmd,
-        currDir: currDir
-    });
+  require(`${config.dir.src}/features/${cmd}`)({
+    gitCmd: gitCmd,
+    currDir: currDir
+  });
 }
 
 
 function exit() {
-    process.exit();
+  process.exit();
 }

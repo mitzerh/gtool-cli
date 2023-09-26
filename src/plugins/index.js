@@ -3,9 +3,9 @@ const githubPlugin = require('./github');
 
 class Plugins extends githubPlugin {
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
 }
 

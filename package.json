@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/mitzerh/gtool-cli#readme",
   "devDependencies": {
-    "eslint": "^8.43.0"
+    "eslint": "8.43.0",
+    "eslint-config-recommended": "4.1.0"
   },
   "dependencies": {
     "cli-helper": "1.0.0",
