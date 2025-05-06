@@ -14,7 +14,8 @@ module.exports = {
   },
 
   commandAlias: {
-    repo: 'web'
+    repo: 'web',
+    sub: 'submodules'
   },
 
   userConfig: (() => {
